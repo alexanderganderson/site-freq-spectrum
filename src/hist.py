@@ -3,13 +3,17 @@
 import pickle
 import numpy as np
 
-file = open('hist.pkl', 'rb')
+datapath = '../data/'
 
+file = open(datapath + 'hist.pkl', 'rb')
+
+desc = pickle.load(file)
 x = pickle.load(file)
 y = pickle.load(file)
 
 file.close()
 
+print desc
 
 import pylab as pyl
 import math
@@ -34,6 +38,10 @@ def make_plot(x,y):
         verticalalignment='center',
         transform=ax.transAxes)
     plt.show()
+
+
+if __name__ == '__main__':
+    make_plot(x,y)
 
 #run ipython hist.py -i in terminal
 # input these lines to autoreload make_plot every line

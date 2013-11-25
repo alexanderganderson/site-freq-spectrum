@@ -13,18 +13,18 @@ from math import floor
 L = 10
 MAX_ITER = L * L * 2
 
-# initialize data structures
+# Initialize data structures
 q = random_queue.RandomQueue() 
 f = {} #dict with (key,val) = (filled node with empty neighbor, value for that cell)
 mg = graph.MarkedGraph(_L=L)
 r = np.zeros(L * L, dtype = 'int') #store the results of the simulation
 
 
-#initialize 
+# Place one cell 
 keys = mg.get_keys()
 
 k = keys[0]
-f[k]=cell.Cell()
+f[k]=cell.InfSiteCell()
 mg.mark(k)
 q.add(k)
 
@@ -43,7 +43,7 @@ for mu in range(MAX_ITER):
         q.add(k1)
     
     if(l_nei == 0):
-        for site in f[k1].ty():
+        for site in f[k1].mut_list():
             r[site] += 1
         del f[k1]
         continue
@@ -58,7 +58,7 @@ for mu in range(MAX_ITER):
     
 
 for val in f.values():
-    for site in val.ty():
+    for site in val.mut_list():
         r[site] += 1
 
 m = np.max(r)
@@ -70,9 +70,18 @@ y = y / (1.0 * tot )
 x = x[:-1]
 
 import pickle
+import datetime
 
-output = open('../data/hist1.pkl','wb')
-
+output = open('../data/hist.pkl','wb')
+from cell import p
+desc = ('Cumulative histogram information for infinite sites model \n' 
+        ' for square lattice with L = ' + str(L) + ' and p = ' + str(p) + '\n' 
+        'where y[i] is the number of sites where mutations occurred' 
+        ' in at least in x[i] individuals in the population \n'
+        'The simulation was run on ' + str(datetime.datetime.now())
+        )   
+             
+pickle.dump(desc, output)
 pickle.dump(x, output)
 pickle.dump(y, output)
 
